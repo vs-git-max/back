@@ -27,6 +27,9 @@ const MessageSchema = new Schema<IMessage>(
   { timestamps: true },
 );
 
+MessageSchema.index({ chat: 1, createdAt: 1 });
+//1 is in the ascending order and -1 is in the descending order
+
 const Message = mongoose.model("Message", MessageSchema);
 
 export default Message;
