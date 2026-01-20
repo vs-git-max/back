@@ -1,6 +1,7 @@
 import type { NextFunction, Response } from "express";
 import type { AuthRequest } from "../../middleware/auth.ts";
 import IChat from "../../models/Chat.ts";
+import { Types } from "mongoose";
 
 async function getOrCreateChats(
   req: AuthRequest,
@@ -11,6 +12,27 @@ async function getOrCreateChats(
     const userId = req.userId;
 
     const { participantId } = req.params;
+
+    if (!participantId)
+      return res
+        .json({ success: false, message: "Not participant Id found" })
+        .status(404);
+
+    if (!Types.ObjectId.isValid(participantId as string)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid participant ID",
+      });
+    }
+
+    if (participantId === userId) {
+      return res
+        .json({
+          success: false,
+          message: "You cannot create a chat with yourself",
+        })
+        .status(400);
+    }
 
     let chat = await IChat.findOne({
       participants: [userId, participantId],
@@ -34,7 +56,7 @@ async function getOrCreateChats(
     res
       .json({
         _id: chat._id,
-        participant: otherParticipant,
+        participant: otherParticipant ?? null,
         lastMessage: chat.lastMessage,
         lastMessageAt: chat.lastMessageAt,
         createdAt: chat.createdAt,
