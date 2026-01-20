@@ -19,7 +19,7 @@ async function getMe(req: AuthRequest, res: Response, next: NextFunction) {
   } catch (error) {
     console.log("Error in the getMe", error);
     res.status(500);
-    next();
+    next(error);
   }
 }
 

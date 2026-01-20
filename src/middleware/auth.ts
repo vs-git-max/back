@@ -28,8 +28,8 @@ export const protectRoute = [
 
       next();
     } catch (error) {
-      console.log("Error in protectRoute");
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500);
+      next(error);
     }
   },
 ];
