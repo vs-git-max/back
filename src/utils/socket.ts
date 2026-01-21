@@ -104,7 +104,7 @@ export function initializeSocket(httpServer: HttpServer) {
 
           await chat.save();
 
-          await message.populate("sender", "name email avatar");
+          await message.populate("sender", "name  avatar");
 
           //emit to the chatroom for users within the chat
           io.to(`chat:${chatId}`).emit("new-message", message);
